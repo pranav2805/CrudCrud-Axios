@@ -16,6 +16,16 @@ const userList = document.querySelector('#users');
 
 form.addEventListener('submit', onSubmit);
 
+window.addEventListener("DOMContentLoaded", () =>{
+    axios.get("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData")
+        .then(response => {
+            for(var i=0;i<response.data.length;i++){
+                showNewUserOnScreen(response.data[i])
+            }
+        })
+        .catch(err => console.log(err))
+})
+
 function onSubmit(e){
     e.preventDefault();
 
@@ -44,7 +54,7 @@ function onSubmit(e){
 
         axios.post("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData", my_obj)
         .then(response => {
-            showUsersOnScreen(response.data)
+            showNewUserOnScreen(response.data)
         })
         .catch(err => console.log(err))
 
@@ -88,7 +98,7 @@ function onSubmit(e){
     }
 }
 
-function showUsersOnScreen(my_obj) {
+function showNewUserOnScreen(my_obj) {
     const li = document.createElement('li');
     //Displaying the details as object
     li.textContent = my_obj.name +" "+ my_obj.email +" "+ my_obj.phone;
@@ -109,7 +119,7 @@ function showUsersOnScreen(my_obj) {
     userList.appendChild(li);
 
     deleteBtn.onclick = () => {
-        localStorage.removeItem(my_obj.email);
+        //localStorage.removeItem(my_obj.email);
         userList.removeChild(li);
     };
 
