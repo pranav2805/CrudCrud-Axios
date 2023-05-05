@@ -152,8 +152,15 @@ function showNewUserOnScreen(my_obj) {
 
 
     editBtn.onclick = () => {
-        localStorage.removeItem(my_obj.email);
-        userList.removeChild(li);
+        // localStorage.removeItem(my_obj.email);
+        // userList.removeChild(li);
+        axios.delete(`https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData/${my_obj._id}`)
+            .then(response => {
+                console.log("Deletion was successful");
+                userList.removeChild(li);
+            })
+            .catch(err => console.log(err))
+
         nameInput.value = my_obj.name;
         emailInput.value = my_obj.email;
         phoneInput.value = my_obj.phone;
