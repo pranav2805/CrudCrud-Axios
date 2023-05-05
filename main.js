@@ -123,24 +123,31 @@ function showNewUserOnScreen(my_obj) {
     deleteBtn.onclick = () => {
         //localStorage.removeItem(my_obj.email);
         //deleting the user details from crudcrud
-        axios.get("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData")
-        .then(response => {
-            var id
-            for(var i=0;i<response.data.length;i++){
-                if(response.data[i].email===my_obj.email){
-                    //response.data.splice(i,1);
-                    id = response.data[i]._id;
-                    break;
-                }
-            }
-            return id;
-        }).then(response => axios.delete("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData/"+response)
-                                .then(response => console.log("Deletion was successful"))
-                                .catch(err => console.log(err+" something went wrong in delete method"))    
-        )
-        .catch(err => console.log(err+" something went wrong in get method"))
+        // axios.get("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData")
+        // .then(response => {
+        //     var id
+        //     for(var i=0;i<response.data.length;i++){
+        //         if(response.data[i].email===my_obj.email){
+        //             //response.data.splice(i,1);
+        //             id = response.data[i]._id;
+        //             break;
+        //         }
+        //     }
+        //     return id;
+        // }).then(response => axios.delete("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData/"+response)
+        //                         .then(response => console.log("Deletion was successful"))
+        //                         .catch(err => console.log(err+" something went wrong in delete method"))    
+        // )
+        // .catch(err => console.log(err+" something went wrong in get method"))
 
-        userList.removeChild(li);
+        axios.delete(`https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData/${my_obj._id}`)
+            .then(response => {
+                console.log("Deletion was successful");
+                userList.removeChild(li);
+            })
+            .catch(err => console.log(err))
+
+        //userList.removeChild(li);
     };
 
 
