@@ -16,6 +16,7 @@ const userList = document.querySelector('#users');
 
 form.addEventListener('submit', onSubmit);
 
+//Loading the page which display already existing users on crudcrud
 window.addEventListener("DOMContentLoaded", () =>{
     axios.get("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData")
         .then(response => {
@@ -52,6 +53,7 @@ function onSubmit(e){
         //Storing the user as object in localstorage
         //localStorage.setItem(emailInput.value, myObj_serialized);
 
+        //Storing the user details as object on crudcrud using post method
         axios.post("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData", my_obj)
         .then(response => {
             showNewUserOnScreen(response.data)
@@ -120,8 +122,27 @@ function showNewUserOnScreen(my_obj) {
 
     deleteBtn.onclick = () => {
         //localStorage.removeItem(my_obj.email);
+        //deleting the user details from crudcrud
+        axios.get("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData")
+        .then(response => {
+            var id
+            for(var i=0;i<response.data.length;i++){
+                if(response.data[i].email===my_obj.email){
+                    //response.data.splice(i,1);
+                    id = response.data[i]._id;
+                    break;
+                }
+            }
+            return id;
+        }).then(response => axios.delete("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData/"+response)
+                                .then(response => console.log("Deletion was successful"))
+                                .catch(err => console.log(err+" something went wrong in delete method"))    
+        )
+        .catch(err => console.log(err+" something went wrong in get method"))
+
         userList.removeChild(li);
     };
+
 
     editBtn.onclick = () => {
         localStorage.removeItem(my_obj.email);
