@@ -15,10 +15,12 @@ const msg = document.querySelector('.msg');
 const userList = document.querySelector('#users');
 
 form.addEventListener('submit', onSubmit);
+var edit = false;
+var tempObj;
 
 //Loading the page which display already existing users on crudcrud
 window.addEventListener("DOMContentLoaded", () =>{
-    axios.get("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData")
+    axios.get("https://crudcrud.com/api/6b0a7c7ea91942b895ea10d9f196038e/appointmentData")
         .then(response => {
             for(var i=0;i<response.data.length;i++){
                 showNewUserOnScreen(response.data[i])
@@ -53,13 +55,24 @@ function onSubmit(e){
         //Storing the user as object in localstorage
         //localStorage.setItem(emailInput.value, myObj_serialized);
 
-        //Storing the user details as object on crudcrud using post method
-        axios.post("https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData", my_obj)
-        .then(response => {
-            showNewUserOnScreen(response.data)
-        })
-        .catch(err => console.log(err))
+        if(edit===true){
+            axios.put("https://crudcrud.com/api/6b0a7c7ea91942b895ea10d9f196038e/appointmentData/"+tempObj._id, my_obj)
+            .then(response => {
+                showNewUserOnScreen({...my_obj, _id: tempObj._id});
+                edit=false;
+                //tempObj=undefined;
+            })
+            .catch(err => console.log(err))
+        }
 
+        else{
+            //Storing the user details as object on crudcrud using post method
+            axios.post("https://crudcrud.com/api/6b0a7c7ea91942b895ea10d9f196038e/appointmentData", my_obj)
+            .then(response => {
+                showNewUserOnScreen(response.data)
+            })
+            .catch(err => console.log(err))
+        }
 
         // //Displaying the details as object
         // li.textContent = my_obj.name +" "+my_obj.email;
@@ -140,7 +153,7 @@ function showNewUserOnScreen(my_obj) {
         // )
         // .catch(err => console.log(err+" something went wrong in get method"))
 
-        axios.delete(`https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData/${my_obj._id}`)
+        axios.delete(`https://crudcrud.com/api/6b0a7c7ea91942b895ea10d9f196038e/appointmentData/${my_obj._id}`)
             .then(response => {
                 console.log("Deletion was successful");
                 userList.removeChild(li);
@@ -154,16 +167,20 @@ function showNewUserOnScreen(my_obj) {
     editBtn.onclick = () => {
         // localStorage.removeItem(my_obj.email);
         // userList.removeChild(li);
-        axios.delete(`https://crudcrud.com/api/851756d334bb40618f1991651df77f02/appointmentData/${my_obj._id}`)
-            .then(response => {
-                console.log("Deletion was successful");
-                userList.removeChild(li);
-            })
-            .catch(err => console.log(err))
+        // axios.delete(`https://crudcrud.com/api/966c2081a532481fafd9782e848bc87d/appointmentData/${my_obj._id}`)
+        //     .then(response => {
+        //         console.log("Deletion was successful");
+        //         userList.removeChild(li);
+        //     })
+        //     .catch(err => console.log(err))
+
+        userList.removeChild(li);
 
         nameInput.value = my_obj.name;
         emailInput.value = my_obj.email;
         phoneInput.value = my_obj.phone;
+        edit = true;
+        tempObj = my_obj;
     }
 }
 
